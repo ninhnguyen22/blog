@@ -5,7 +5,7 @@
            {{-- <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="16" alt=""
                  loading="lazy"
                  style="margin-top: -3px;"/>--}}
-            <a class="nav-link" aria-current="page" href="#intro">{{ $navbar->getBrand() }}</a>
+            <a class="nav-link" aria-current="page" href="/">{{ $navbar->getBrand() }}</a>
         </a>
         <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarExample01"
                 aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">

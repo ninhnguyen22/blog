@@ -8,6 +8,8 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class ArticleController extends AdminController
 {
@@ -28,12 +30,17 @@ class ArticleController extends AdminController
      */
     protected $categoryService;
 
+    protected $categoryList = [];
+
     public function __construct(
         ArticleService $articleService,
         CategoryService $categoryService)
     {
         $this->articleService = $articleService;
         $this->categoryService = $categoryService;
+
+        //
+        $this->categoryList = $this->categoryService->getForSelectBox();
     }
 
     /**
@@ -46,6 +53,10 @@ class ArticleController extends AdminController
     {
         $model = $this->articleService->getModel();
         $grid = new Grid($model);
+
+        $grid->filter(function ($filter) {
+            $filter->equal('category_id')->select($this->categoryList);
+        });
 
         $grid->column('id', __('ID'))->sortable();
         $grid->column('title', __('Title'));
@@ -60,12 +71,15 @@ class ArticleController extends AdminController
                     return "<span class=\"text-success\">Public</span>";
                 case $model::STATUS_PROTECTED:
                     return "<span class=\"text-info\">Protected</span>";
+                case $model::STATUS_RECYCLE:
+                    return "<span class=\"text-default\">Recycle</span>";
             }
         });
-        $grid->column('category', 'Category')->display(function ($category)  {
+        $grid->column('category', 'Category')->display(function ($category) {
             return "{$category['name']}";
         });
-        $grid->column('user', 'User')->display(function ($user)  {
+
+        $grid->column('user', 'User')->display(function ($user) {
             return "{$user['name']}";
         });
 
@@ -84,12 +98,30 @@ class ArticleController extends AdminController
     protected function detail($id)
     {
         $model = $this->articleService->getModel();
-        $show = new Show($model->findOrFail($id));
+        $item = $model->findOrFail($id);
+        $slug = Str::slug($item->title);
+        $show = new Show($item);
 
         $show->field('id', __('ID'));
+        $show->field('link', __('Detail'))->as(function ($link) use ($slug, $id) {
+            return route('article', [
+                'slug' => $slug,
+                'id' => $id
+            ]);
+        })->link();
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
+        $show->field('title', __('Title'));
+        $show->field('preview', __('Preview'));
+        $show->category('Category', function ($category) {
 
+            $category->setResource('/admin/categories');
+            $category->name();
+        });
+
+        $options = $this->articleService->getOptionsForStatusInput();
+        $show->field('status', __('Status'))
+            ->using($options);
         return $show;
     }
 
@@ -116,7 +148,7 @@ class ArticleController extends AdminController
             ->options($options)->default(1)
             ->rules('required');
         $form->select('category_id', 'Category')
-            ->options($this->categoryService->getForSelectBox())
+            ->options($this->categoryList)
             ->default($model->category_id)
             ->rules('required');
 

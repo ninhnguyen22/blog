@@ -35,6 +35,7 @@ class ArticleService extends BaseService
             $model::STATUS_PRIVATE => 'Private',
             $model::STATUS_PROTECTED => 'Protected',
             $model::STATUS_PUBLIC => 'Public',
+            $model::STATUS_RECYCLE => 'Recycle',
         ];
     }
 

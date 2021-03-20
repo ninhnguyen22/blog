@@ -44,8 +44,7 @@ class CategoryService extends BaseService
             $select[$category->id] = str_repeat($prefix, $recursiveIndent) . $category->name;
             $children = $category->categories();
             if ($children->count() > 0) {
-                $recursiveIndent++;
-                $select += $this->getForSelectBoxRecursive($children->get(), $id, $prefix, $recursiveIndent);
+                $select += $this->getForSelectBoxRecursive($children->get(), $id, $prefix, $recursiveIndent + 1);
             }
         }
         return $select;

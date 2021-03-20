@@ -4,6 +4,7 @@ namespace App\Models\Blog;
 
 use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Traits\DefaultDatetimeFormat;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,7 @@ class Article extends Model
     const STATUS_PRIVATE = 2;
     const STATUS_PROTECTED = 3;
     const STATUS_PUBLIC = 4;
+    const STATUS_RECYCLE = 5;
 
     protected $fillable = ['categorty_id', 'title', 'preview', 'content', 'status', 'user_id'];
 
@@ -33,6 +35,17 @@ class Article extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * Scope a query to only include popular users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status', '!=', self::STATUS_RECYCLE);
     }
 
 }

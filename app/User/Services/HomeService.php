@@ -20,7 +20,8 @@ class HomeService
     public function getArticleList(ArticleCondition $articleCondition)
     {
         $articles = $this->article
-            ->with('category');
+            ->with('category')
+            ->active();
         if ($articleCondition->getCategoryId()) {
             $articles->where('category_id', $articleCondition->getCategoryId());
         }
@@ -33,6 +34,7 @@ class HomeService
     public function getArticleDetail($id)
     {
         return $this->article
+            ->active()
             ->findOrfail($id);
     }
 }
