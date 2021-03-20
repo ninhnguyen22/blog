@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => 'Laravel-admin',
+    'name' => 'N-admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<b>Laravel</b> admin',
+    'logo' => '<b>N</b> admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini' => '<b>La</b>',
+    'logo-mini' => '<b>N</b>',
 
     /*
     |--------------------------------------------------------------------------
@@ -67,6 +67,12 @@ return [
         'blog' => [
             'prefix' => 'blog',
             'namespace' => 'Blog',
+            'middleware' => ['web', 'admin'],
+        ],
+
+        'resume' => [
+            'prefix' => 'resume',
+            'namespace' => 'Resume',
             'middleware' => ['web', 'admin'],
         ],
     ],

@@ -69,4 +69,31 @@ class CategoryService extends BaseService
         }
     }
 
+    public function getForNavbar($prefix = '&nbsp;&nbsp;')
+    {
+        $parents = $this->categoryModel->parent()->get();
+        return $this->getForNavbarRecursive($parents, $prefix, 0);
+    }
+
+    public function getForNavbarRecursive($categories, $prefix, $recursiveIndent)
+    {
+        $select = [];
+        foreach ($categories as $category) {
+            $select[] = [
+                'id' => $category->id,
+                'slug' => $category->slug,
+                'name' => str_repeat($prefix, $recursiveIndent) . $category->name
+            ];
+            $children = $category->categories();
+            if ($children->count() > 0) {
+                $recursiveIndent++;
+                $select = array_merge($select, $this->getForNavbarRecursive($children->get(), $prefix, $recursiveIndent));
+            }
+            if ($recursiveIndent === 0) {
+                $select[] = ['id' => 'break'];
+            }
+        }
+        return $select;
+    }
+
 }

@@ -3,7 +3,6 @@
 namespace App\Admin\Services\Blog;
 
 use App\Models\Blog\Article;
-use App\Models\Blog\Category;
 use Illuminate\Database\Eloquent\Collection;
 
 class ArticleService extends BaseService

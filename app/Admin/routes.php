@@ -32,4 +32,18 @@ Route::group([
         $router->get('api/tags', 'TagController@api');
     });
 
+    /**
+     * Resume router
+     */
+    $router->group([
+        'prefix' => config('admin.route.resume.prefix'),
+        'namespace' => config('admin.route.resume.namespace'),
+        'middleware' => config('admin.route.resume.middleware'),
+        'as' => config('admin.route.prefix') . '.' . config('admin.route.resume.prefix') . '.',
+    ], function (Router $router) {
+        $router->resource('list', 'IndexController');
+        $router->get('/generate', 'IndexController@generate')->name('generate');
+        $router->resource('profile', 'ProfileController');
+    });
+
 });

@@ -121,10 +121,11 @@ class ArticleController extends AdminController
             ->rules('required');
 
         $tags = $this->articleService->getOptionsForTagInput();
+        $tagOptions = !empty($tags) ? $tags->keys() : [];
         $form->multipleSelect('tags')
             ->ajax('/admin/blog/api/tags')
             ->options($tags)
-            ->default($tags->keys());
+            ->default($tagOptions);
 
         $form->hidden('user_id');
 
