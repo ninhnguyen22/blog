@@ -7,6 +7,7 @@ use App\User\Layout\Breadcrumb;
 use App\User\Layout\Content;
 use App\User\Services\Article\ArticleCondition;
 use App\User\Services\HomeService;
+use Illuminate\Support\Facades\File;
 
 class HomeController extends UserBaseController
 {
@@ -82,8 +83,15 @@ class HomeController extends UserBaseController
         $this->view = 'article';
         $cond = new ArticleCondition();
         $cond->setCategory($id, $slug);
-        return $this->getContent($content)
+
+        $view = $this->getContent($content)
             ->setData($this->homeService->getArticleDetail($id));
+
+        if (request()->has('generate')) {
+            return File::put(request()->get('generate'), $view->render());
+        }
+
+        return $view;
     }
 
     protected function getContent(Content $content)

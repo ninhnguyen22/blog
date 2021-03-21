@@ -4,6 +4,7 @@ namespace App\Admin\Services\Blog;
 
 use App\Models\Blog\Article;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 
 class ArticleService extends BaseService
 {
@@ -56,6 +57,15 @@ class ArticleService extends BaseService
             return $article->tags()->pluck('name', 'id');
         }
         return [];
+    }
+
+    public static function getGenerateUrl($id, $slug)
+    {
+        $slug = Str::slug($slug);
+
+        $dir = config('user.generate.output.base') . DIRECTORY_SEPARATOR . config('user.generate.output.articles');
+        $filePath = $dir . DIRECTORY_SEPARATOR . $slug . '-' . $id . '.html';
+        return route('article', ['slug' => $slug, 'id' => $id]) . '?generate=' . $filePath;
     }
 
 }

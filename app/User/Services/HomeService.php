@@ -3,6 +3,7 @@
 namespace App\User\Services;
 
 use App\Models\Blog\Article;
+use App\User\Layout\Content;
 use App\User\Services\Article\ArticleCondition;
 
 class HomeService

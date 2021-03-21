@@ -24,4 +24,11 @@ return [
 
         'middleware' => ['web'],
     ],
+
+    'generate' => [
+        'output' => [
+            'base' => 'ninhnghia',
+            'articles' => 'articles'
+        ],
+    ],
 ];

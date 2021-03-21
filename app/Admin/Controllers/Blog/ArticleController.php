@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Blog;
 
+use App\Admin\Actions\Generate;
 use App\Admin\Services\Blog\ArticleService;
 use App\Admin\Services\Blog\CategoryService;
 use Encore\Admin\Controllers\AdminController;
@@ -85,6 +86,10 @@ class ArticleController extends AdminController
 
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
+
+        $grid->column('generate', 'Generate')->display(function ($generate) {
+            return "<a href='" . ArticleService::getGenerateUrl($this->id, $this->title) . "' target='_blank'>Generate</a>";
+        });
 
         return $grid;
     }
