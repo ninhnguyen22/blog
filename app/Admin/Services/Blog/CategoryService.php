@@ -4,6 +4,7 @@ namespace App\Admin\Services\Blog;
 
 use App\Models\Blog\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryService extends BaseService
 {
@@ -93,6 +94,13 @@ class CategoryService extends BaseService
             }
         }
         return $select;
+    }
+
+    public static function getGenerateUrl($id, $slug, $view = false)
+    {
+        $generate = $view ? '' : '?generate=1';
+
+        return route('blog.category', ['slug' => Str::slug($slug), 'id' => $id]) . $generate;
     }
 
 }

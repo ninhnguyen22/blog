@@ -3,6 +3,7 @@
 namespace App\Admin\Services\Blog;
 
 use App\Models\Blog\Article;
+use App\Services\MarkdownContent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
@@ -13,11 +14,17 @@ class ArticleService extends BaseService
      */
     protected $articleModel;
 
-    public function __construct(Article $article)
+    /**
+     * @var MarkdownContent
+     */
+    protected $markdownContent;
+
+    public function __construct(Article $article, MarkdownContent $markdownContent)
     {
         parent::__construct();
 
         $this->articleModel = $article;
+        $this->markdownContent = $markdownContent;
     }
 
     /**
@@ -26,6 +33,16 @@ class ArticleService extends BaseService
     public function getModel()
     {
         return $this->articleModel;
+    }
+
+    /**
+     * @return MarkdownContent
+     */
+    public function getConverter()
+    {
+        $a = $this->markdownContent->convertToHtml('## ds');
+        dd($this->markdownContent);
+        return $this->markdownContent;
     }
 
     public function getOptionsForStatusInput()
@@ -59,13 +76,11 @@ class ArticleService extends BaseService
         return [];
     }
 
-    public static function getGenerateUrl($id, $slug)
+    public static function getGenerateUrl($id, $slug, $view = false)
     {
-        $slug = Str::slug($slug);
+        $generate = $view ? '' : '?generate=1';
 
-        $dir = config('user.generate.output.base') . DIRECTORY_SEPARATOR . config('user.generate.output.articles');
-        $filePath = $dir . DIRECTORY_SEPARATOR . $slug . '-' . $id . '.html';
-        return route('article', ['slug' => $slug, 'id' => $id]) . '?generate=' . $filePath;
+        return route('blog.detail', ['slug' => Str::slug($slug), 'id' => $id]) . $generate;
     }
 
 }

@@ -25,11 +25,21 @@ Route::group([
 
         $router->resource('categories', 'CategoryController');
         $router->resource('articles', 'ArticleController');
-
         $router->resource('tags', 'TagController');
+        // GIT Page
+//        $router->resource('git_pages', 'GitPageController');
 
         // API
-        $router->get('api/tags', 'TagController@api');
+        $router->group([
+            'as' => 'api.',
+            'prefix' => 'api'
+        ], function ($router) {
+            $router->get('tags', 'TagController@api');
+            $router->get('home', 'GitPageController@home')->name('home');
+            $router->get('article', 'GitPageController@article')->name('article');
+            $router->get('categories', 'GitPageController@categories')->name('categories');
+            $router->get('category', 'GitPageController@category')->name('category');
+        });
     });
 
     /**

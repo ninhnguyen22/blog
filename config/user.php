@@ -27,8 +27,9 @@ return [
 
     'generate' => [
         'output' => [
-            'base' => 'ninhnghia',
-            'articles' => 'articles'
+            'base' => 'cv',
+            'articles' => 'articles',
+            'category' => 'category'
         ],
     ],
 ];

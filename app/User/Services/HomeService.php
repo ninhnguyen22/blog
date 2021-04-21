@@ -29,7 +29,7 @@ class HomeService
 
         return $articles
             ->orderBy('updated_at', 'DESC')
-            ->paginate(1);
+            ->paginate();
     }
 
     public function getArticleDetail($id)

@@ -1,6 +1,6 @@
-<div class="col-lg-4 col-md-12 mb-4 mb-lg-0 p-2">
+<div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
     <!-- News block -->
-    <div class="hover-overlay ripple shadow-2-strong p-2">
+    <div class="hover-overlay shadow-2-strong p-2">
         <!-- Article data -->
         <div class="row mb-3">
             <div class="col-6">

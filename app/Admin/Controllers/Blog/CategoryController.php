@@ -63,6 +63,11 @@ class CategoryController extends AdminController
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
+        $grid->column('generate', 'Generate')->display(function ($generate) {
+            return "<a href='" . CategoryService::getGenerateUrl($this->id, $this->slug, true) . "' target='_blank'>Over view</a>
+                <br /><a href='" . CategoryService::getGenerateUrl($this->id, $this->slug) . "' target='_blank'>Generate</a>";
+        });
+
         return $grid;
     }
 

@@ -27,6 +27,14 @@ class Category extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
+    /**
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */

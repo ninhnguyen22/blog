@@ -2,14 +2,12 @@
 
 namespace App\Admin\Controllers\Blog;
 
-use App\Admin\Actions\Generate;
 use App\Admin\Services\Blog\ArticleService;
 use App\Admin\Services\Blog\CategoryService;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class ArticleController extends AdminController
@@ -40,7 +38,6 @@ class ArticleController extends AdminController
         $this->articleService = $articleService;
         $this->categoryService = $categoryService;
 
-        //
         $this->categoryList = $this->categoryService->getForSelectBox();
     }
 
@@ -54,6 +51,12 @@ class ArticleController extends AdminController
     {
         $model = $this->articleService->getModel();
         $grid = new Grid($model);
+
+        $grid->header(function ($query) {
+            return '<a onclick="gitPageAllGenerate(\'' . route('admin.admin.blog.api.home') . '\')" href="javascript:;">Generate home</a> ' .
+                ' <a href="' . route('blog.home') . '" target="_blank">Overview home</a>' .
+                ' <a onclick="gitPageAllGenerate(\'' . route('admin.admin.blog.api.categories') . '\')"  href="javascript:;">Generate all category</a> ';
+        });
 
         $grid->filter(function ($filter) {
             $filter->equal('category_id')->select($this->categoryList);
@@ -88,7 +91,11 @@ class ArticleController extends AdminController
         $grid->column('updated_at', __('Updated at'));
 
         $grid->column('generate', 'Generate')->display(function ($generate) {
-            return "<a href='" . ArticleService::getGenerateUrl($this->id, $this->title) . "' target='_blank'>Generate</a>";
+            $title = Str::slug($this->title);
+            $p = '\'' . route('admin.admin.blog.api.article') . '\',' . $this->id . ',\'' . $title .'\'';
+            $g = '<a onclick="gitPageSpecGenerate(' . $p . ')"  href="javascript:;">Generate</a>';
+            return "<a href='" . ArticleService::getGenerateUrl($this->id, $this->title, true) . "' target='_blank'>Over view</a>
+                <br /> $g ";
         });
 
         return $grid;
@@ -146,7 +153,8 @@ class ArticleController extends AdminController
 
         $form->text('title', trans('admin.title'))->rules('required');
         $form->text('preview', trans('admin.preview'));
-        $form->ckeditor('content', 'Content')->rules('required');
+//        $form->ckeditor('content', 'Content')->rules('required');
+        $form->textarea('content', 'Content')->rules('required')->setElementClass('markdown');
 
         $options = $this->articleService->getOptionsForStatusInput();
         $form->radio('status', 'Status')
