@@ -52,12 +52,6 @@ class ArticleController extends AdminController
         $model = $this->articleService->getModel();
         $grid = new Grid($model);
 
-        $grid->header(function ($query) {
-            return '<a onclick="gitPageAllGenerate(\'' . route('admin.admin.blog.api.home') . '\')" href="javascript:;">Generate home</a> ' .
-                ' <a href="' . route('blog.home') . '" target="_blank">Overview home</a>' .
-                ' <a onclick="gitPageAllGenerate(\'' . route('admin.admin.blog.api.categories') . '\')"  href="javascript:;">Generate all category</a> ';
-        });
-
         $grid->filter(function ($filter) {
             $filter->equal('category_id')->select($this->categoryList);
         });
@@ -89,14 +83,6 @@ class ArticleController extends AdminController
 
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
-
-        $grid->column('generate', 'Generate')->display(function ($generate) {
-            $title = Str::slug($this->title);
-            $p = '\'' . route('admin.admin.blog.api.article') . '\',' . $this->id . ',\'' . $title .'\'';
-            $g = '<a onclick="gitPageSpecGenerate(' . $p . ')"  href="javascript:;">Generate</a>';
-            return "<a href='" . ArticleService::getGenerateUrl($this->id, $this->title, true) . "' target='_blank'>Over view</a>
-                <br /> $g ";
-        });
 
         return $grid;
     }
@@ -147,13 +133,21 @@ class ArticleController extends AdminController
         $model = $this->articleService->getModel();
         $form = new Form($model);
 
+        $form->saved(function ($form) {
+            $this->articleService->generate($form->model());
+        });
+
+        $form->editing(function ($form) {
+            $date = $form->model()->updated_at->format('Y-m-d');
+            $this->articleService->generateFileName($date, $form->model()->title);
+        });
+
         $form->display('id', __('ID'));
         $form->display('created_at', __('Created At'));
         $form->display('updated_at', __('Updated At'));
 
         $form->text('title', trans('admin.title'))->rules('required');
         $form->text('preview', trans('admin.preview'));
-//        $form->ckeditor('content', 'Content')->rules('required');
         $form->textarea('content', 'Content')->rules('required')->setElementClass('markdown');
 
         $options = $this->articleService->getOptionsForStatusInput();

@@ -1,0 +1,14 @@
+{
+    "items": [
+        {
+            "title": "IG_Automation_Bot (Work in progress)",
+            "content": "Python script for Instagram automation using Instaloader. Used for auto following and DM. Easily configurable through Yaml config files!<br><br>Link : <a href='https:\/\/github.com\/hbollon\/IG_Automation_Bot'>https:\/\/github.com\/hbollon\/IG_Automation_Bot<\/a>",
+            "link": "https:\/\/github.com\/hbollon\/IG_Automation_Bot",
+            "image": "5e4a69637530f4dbedddbb8a7258dd57.jpg",
+            "color": "red",
+            "date": "2021-05-24"
+        }
+    ],
+    "title": "My projects",
+    "description": "This is my story"
+}

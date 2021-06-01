@@ -1,0 +1,66 @@
+{
+  "items": [
+    {
+      "title": "C",
+      "img": "C.png"
+    },
+    {
+      "title": "C++",
+      "img": "cplusplus.png"
+    },
+    {
+      "title": "C#",
+      "img": "Csharp.png"
+    },
+    {
+      "title": "Java",
+      "img": "java.png"
+    },
+    {
+      "title": "Unity",
+      "img": "unity.png"
+    },
+    {
+      "title": "HTML",
+      "img": "html.png"
+    },
+    {
+      "title": "CSS",
+      "img": "css.png"
+    },
+    {
+      "title": "PHP",
+      "img": "php.png"
+    },
+    {
+      "title": "Laravel",
+      "img": "laravel.png"
+    },
+    {
+      "title": "VueJS",
+      "img": "vuejs.png"
+    },
+    {
+      "title": "Android",
+      "img": "android.png"
+    },
+    {
+      "title": "Linux",
+      "img": "linux.png"
+    },
+    {
+      "title": "Git/Github",
+      "img": "Octocat.png"
+    },
+    {
+      "title": "Go",
+      "img": "go.png"
+    },
+    {
+      "title": "VPS/Web Hosting",
+      "img": "ovh.png"
+    }
+  ],
+  "title": "Skills",
+  "description": "Here is my armament"
+}

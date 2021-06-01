@@ -3,9 +3,10 @@
 namespace App\Admin\Services\Blog;
 
 use App\Models\Blog\Article;
-use App\Services\MarkdownContent;
+use App\Services\Markdown\Content;
+use App\Services\Markdown\Generate as MarkdownGenerate;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 
 class ArticleService extends BaseService
 {
@@ -15,16 +16,16 @@ class ArticleService extends BaseService
     protected $articleModel;
 
     /**
-     * @var MarkdownContent
+     * @var MarkdownGenerate
      */
-    protected $markdownContent;
+    protected $markdownGenerate;
 
-    public function __construct(Article $article, MarkdownContent $markdownContent)
+    public function __construct(Article $article, MarkdownGenerate $generate)
     {
         parent::__construct();
 
         $this->articleModel = $article;
-        $this->markdownContent = $markdownContent;
+        $this->markdownGenerate = $generate;
     }
 
     /**
@@ -33,16 +34,6 @@ class ArticleService extends BaseService
     public function getModel()
     {
         return $this->articleModel;
-    }
-
-    /**
-     * @return MarkdownContent
-     */
-    public function getConverter()
-    {
-        $a = $this->markdownContent->convertToHtml('## ds');
-        dd($this->markdownContent);
-        return $this->markdownContent;
     }
 
     public function getOptionsForStatusInput()
@@ -76,11 +67,29 @@ class ArticleService extends BaseService
         return [];
     }
 
-    public static function getGenerateUrl($id, $slug, $view = false)
+    public function generate($model)
     {
-        $generate = $view ? '' : '?generate=1';
+        $content = new Content();
 
-        return route('blog.detail', ['slug' => Str::slug($slug), 'id' => $id]) . $generate;
+        $tags = $model->tags->pluck('name');
+        $updatedAt = $model->updated_at->format('Y-m-d');
+
+        $content->setTitle($model->title)
+            ->setAuthor(auth()->user()->name)
+            ->setDate($updatedAt)
+            ->setLocation('VN')
+            ->setTags($tags)
+            ->setDescription($model->preview)
+            ->setImage('')
+            ->setContent($model->content);
+
+        $this->markdownGenerate->generate($content);
+    }
+
+    public function generateFileName($date, $title)
+    {
+        $oldFileName = $this->markdownGenerate->getFileName($date, $title);
+        Session::put('_old_file_name', $oldFileName);
     }
 
 }

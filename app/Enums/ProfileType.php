@@ -4,7 +4,7 @@ namespace App\Enums;
 
 final class ProfileType extends Enum
 {
-    const MAIN = 1;
-    const CONTACT = 2;
-    const NETWORK = 3;
+    const USER = 1;
+    const DESCRIPTIONS = 2;
+    const LINKS = 3;
 }

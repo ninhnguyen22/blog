@@ -21,9 +21,10 @@
 Encore\Admin\Form::forget(['map', 'editor']);
 
 Admin::css('/vendor/laravel-admin/cus/_cus.css');
-Admin::css('/vendor/laravel-admin/cus/bootstrap-markdown-editor.css');
+Admin::css('/bower_components/editor.md/css/editormd.min.css');
+
 Admin::js('/vendor/laravel-admin/cus/_convert_slug.js?v=' . time());
-Admin::js('https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js');
-Admin::js('https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js');
-Admin::js('/vendor/laravel-admin/cus/bootstrap-markdown-editor.js');
+
+Admin::js('/bower_components/editor.md/editormd.min.js');
+Admin::js('/vendor/laravel-admin/cus/md.js');
 Admin::js('/vendor/laravel-admin/cus/_cus.js?v=' . time());

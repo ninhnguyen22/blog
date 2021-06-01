@@ -20,7 +20,7 @@ class Article extends Model
     const STATUS_PUBLIC = 4;
     const STATUS_RECYCLE = 5;
 
-    protected $fillable = ['categorty_id', 'title', 'preview', 'content', 'status', 'user_id'];
+    protected $fillable = ['category_id', 'title', 'preview', 'content', 'status', 'user_id'];
 
     public function user()
     {

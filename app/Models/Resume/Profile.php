@@ -11,6 +11,14 @@ class Profile extends Model
     use DefaultDatetimeFormat;
     use HasFactory;
 
-    protected $fillable = ['type', 'icon', 'name', 'content_key', 'content_value'];
+    protected $fillable = ['icon', 'name', 'type', 'content_key', 'content_value', 'active'];
 
+    protected $casts = [
+        'active' => 'boolean'
+    ];
+
+    public function scopePublic($query)
+    {
+        return $query->where('active', true);
+    }
 }

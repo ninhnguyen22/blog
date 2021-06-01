@@ -3,7 +3,6 @@
 namespace App\Admin\Services\Blog;
 
 use App\Models\Blog\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class CategoryService extends BaseService

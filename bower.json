@@ -1,0 +1,17 @@
+{
+  "name": "blog",
+  "description": "",
+  "main": "",
+  "authors": [
+    "ninhnghia <ninhnghia2@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/ninhnguyen22/blog",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

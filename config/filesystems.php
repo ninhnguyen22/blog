@@ -41,6 +41,12 @@ return [
             'root' => storage_path('app/public/admin'),
         ],
 
+        'blog' => [
+            'driver' => 'local',
+            'url' => env('APP_URL').'/storage/blog',
+            'root' => storage_path('app/public/blog'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

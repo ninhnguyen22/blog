@@ -19,7 +19,7 @@ class CreateProfilesTable extends Migration
             $table->string('icon')->nullable();
             $table->string('name')->nullable();
             $table->string('content_key');
-            $table->string('content_value');
+            $table->text('content_value');
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

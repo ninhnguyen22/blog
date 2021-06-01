@@ -1,0 +1,38 @@
+{
+  "description": "Professional and academic",
+  "title": "Experience",
+  "professional": [
+    {
+      "year": "01.2020 - 05.2020",
+      "title": "Urbalog LAET Project",
+      "content": "Digitizing the Urbalog board game on Android with the Nearby Connection API"
+    },
+    {
+      "year": "07.2019",
+      "title": "Pfeiffer Vacuum SAS, Annecy",
+      "content": "Interim IT mission: implementation of a new Qlickview access management program + Laravel development"
+    },
+    {
+      "year": "07.2018",
+      "title": "Pfeiffer Vacuum SAS, Annecy",
+      "content": "Interim IT mission: Management of SAP tables and inventory of sub-programs."
+    }
+  ],
+  "academic": [
+    {
+      "year": "From September 2020",
+      "title": "Computer Science Master at USMB",
+      "content": "Specialized in artificial intelligence and collaborative systems"
+    },
+    {
+      "year": "2017 - 2020",
+      "title": "IT License",
+      "content": "University Savoie Mont-Blanc, France"
+    },
+    {
+      "year": "2013 - 2017",
+      "title": "Scientific Baccalaureate",
+      "content": "Lycée de l'Albanais at Rumilly, France"
+    }
+  ]
+}

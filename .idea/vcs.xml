@@ -2,8 +2,11 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/blog/blog/.vuepress/dist" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/blog/docs" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/public/cv" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/public/ninhnghia" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/public/ninhnghia/articles" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/portfolio/dist" vcs="Git" />
   </component>
 </project>

@@ -26,6 +26,7 @@ Route::group([
         $router->resource('categories', 'CategoryController');
         $router->resource('articles', 'ArticleController');
         $router->resource('tags', 'TagController');
+
         // GIT Page
 //        $router->resource('git_pages', 'GitPageController');
 
@@ -54,6 +55,9 @@ Route::group([
         $router->resource('list', 'IndexController');
         $router->get('/generate', 'IndexController@generate')->name('generate');
         $router->resource('profile', 'ProfileController');
+        $router->resource('skill', 'SkillController');
+        $router->resource('project', 'ProjectController');
+        $router->resource('experience', 'ExperienceController');
     });
 
 });

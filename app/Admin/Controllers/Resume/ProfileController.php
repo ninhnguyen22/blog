@@ -40,23 +40,24 @@ class ProfileController extends AdminController
         $model = $this->profileService->getModel();
         $grid = new Grid($model);
 
-        $grid->model()->orderBy('type', 'asc')
+        $grid->filter(function ($filter) {
+            $filter->equal('type')->select(array_flip($this->profileService->getForSelectBox()));
+        });
+
+        $grid->model()
+            ->orderBy('type', 'asc')
             ->orderBy('content_key', 'asc');
 
         $grid->column('id', __('ID'))->sortable();
-        $grid->header(function ($query) {
-            $action = route('admin.admin.resume.generate');
-            return view('components.resume.generate-button', compact('action'));
-        });
 
         $grid->column('type', 'Type')->display(function ($type) {
             switch ($type) {
-                case ProfileType::NETWORK:
-                    return "Network";
-                case ProfileType::CONTACT:
-                    return "Contact";
+                case ProfileType::DESCRIPTIONS:
+                    return "Descriptions";
+                case ProfileType::LINKS:
+                    return "Links";
                 default:
-                    return "Main";
+                    return "User";
             }
         });
 
@@ -93,6 +94,8 @@ class ProfileController extends AdminController
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
         $show->field('name', __('Name'));
+        $show->field('content_key', __('Content Key'));
+        $show->field('content_value', __('Content Value'));
 
         return $show;
     }
@@ -107,6 +110,10 @@ class ProfileController extends AdminController
         $model = $this->profileService->getModel();
         $form = new Form($model);
 
+        $form->saved(function () {
+            $this->profileService->generate();
+        });
+
         $form->display('id', __('ID'));
         $form->display('created_at', __('Created At'));
         $form->display('updated_at', __('Updated At'));
@@ -120,7 +127,8 @@ class ProfileController extends AdminController
         $form->text('icon', 'Icon');
 
         $form->text('content_key', 'Content Key')->rules('required');
-        $form->text('content_value', 'Content Value')->rules('required');
+        $form->textarea('content_value', 'Content Value')->rules('required');
+
         $states = $this->profileService->getStateForStatusInput();
         $form->switch('active', 'Active')->states($states)->default(1);
 
