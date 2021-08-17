@@ -418,4 +418,9 @@ return [
             ]
         ]
     ],
+
+    /**
+     * Gist
+     */
+    'gist_auth_token' => getenv('GIST_AUTH_TOKEN')
 ];

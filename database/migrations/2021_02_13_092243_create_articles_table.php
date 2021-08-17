@@ -19,6 +19,7 @@ class CreateArticlesTable extends Migration
             $table->string('title');
             $table->text('preview')->nullable();
             $table->text('content');
+            $table->timestamp('publish_at');
             $table->tinyInteger('status')->default(\App\Models\Blog\Article::STATUS_DRAFT);
             $table->unsignedTinyInteger('user_id');
             $table->timestamps();

@@ -29,6 +29,16 @@ class TagService extends BaseService
         }
     }
 
+    public function getForSelectBox()
+    {
+        $all = $this->tagModel->get()->toArray();
+        $tags = [];
+        foreach ($all as $tag) {
+            $tags[$tag['id']] = $tag['name'];
+        }
+        return $tags;
+    }
+
     public function getModel()
     {
         return $this->tagModel;

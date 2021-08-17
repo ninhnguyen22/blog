@@ -13,6 +13,8 @@ class Article extends Model
     use DefaultDatetimeFormat;
     use HasFactory;
 
+    protected $dates = ['publish_at', 'created_at', 'updated_at'];
+
     // Status
     const STATUS_DRAFT = 1;
     const STATUS_PRIVATE = 2;

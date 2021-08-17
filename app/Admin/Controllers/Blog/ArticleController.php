@@ -4,6 +4,7 @@ namespace App\Admin\Controllers\Blog;
 
 use App\Admin\Services\Blog\ArticleService;
 use App\Admin\Services\Blog\CategoryService;
+use App\Admin\Services\Blog\TagService;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -29,16 +30,25 @@ class ArticleController extends AdminController
      */
     protected $categoryService;
 
+    /**
+     * @var TagService
+     */
+    protected $tagService;
+
     protected $categoryList = [];
+    protected $tags = [];
 
     public function __construct(
         ArticleService $articleService,
+        TagService $tagService,
         CategoryService $categoryService)
     {
         $this->articleService = $articleService;
         $this->categoryService = $categoryService;
+        $this->tagService = $tagService;
 
         $this->categoryList = $this->categoryService->getForSelectBox();
+        $this->tags = $this->tagService->getForSelectBox();
     }
 
     /**
@@ -52,13 +62,22 @@ class ArticleController extends AdminController
         $model = $this->articleService->getModel();
         $grid = new Grid($model);
 
+        $grid->model()
+            ->orderBy('publish_at', 'desc')
+            ->orderBy('updated_at', 'desc');
+
         $grid->filter(function ($filter) {
-            $filter->equal('category_id')->select($this->categoryList);
+            $filter->equal('category_id', 'Category')->select($this->categoryList);
+            $filter->where(function ($query) {
+                $query->has('tags');
+            }, 'Tag', 'tag')
+            ->select($this->tags);
+            $filter->like('title', 'Title');
         });
 
         $grid->column('id', __('ID'))->sortable();
         $grid->column('title', __('Title'));
-        $grid->column('preview', __('Preview'));
+        $grid->column('publish_at', __('Publish At'));
         $grid->column('status', 'Status')->display(function ($status) use ($model) {
             switch ($status) {
                 case $model::STATUS_DRAFT:
@@ -111,8 +130,8 @@ class ArticleController extends AdminController
         $show->field('updated_at', __('Updated at'));
         $show->field('title', __('Title'));
         $show->field('preview', __('Preview'));
-        $show->category('Category', function ($category) {
 
+        $show->category('Category', function ($category) {
             $category->setResource('/admin/categories');
             $category->name();
         });
@@ -137,15 +156,15 @@ class ArticleController extends AdminController
             $this->articleService->generate($form->model());
         });
 
-        $form->editing(function ($form) {
-            $date = $form->model()->updated_at->format('Y-m-d');
-            $this->articleService->generateFileName($date, $form->model()->title);
-        });
+       /* $form->editing(function ($form) {
+            $this->articleService->generateFileName($form->model()->title);
+        });*/
 
         $form->display('id', __('ID'));
         $form->display('created_at', __('Created At'));
         $form->display('updated_at', __('Updated At'));
 
+        $form->datetime('publish_at', 'Publish At');
         $form->text('title', trans('admin.title'))->rules('required');
         $form->text('preview', trans('admin.preview'));
         $form->textarea('content', 'Content')->rules('required')->setElementClass('markdown');

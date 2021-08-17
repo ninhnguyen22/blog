@@ -12,9 +12,10 @@ class Content
     protected $content;
     protected $description;
     protected $image;
+    protected $categories;
 
     public $fillable = [
-        'title', 'date', 'tags', 'author', 'location', 'content', 'description', 'image'
+        'title', 'date', 'tags', 'author', 'location', 'content', 'description', 'image', 'categories'
     ];
 
     public function getAttribute($name)
@@ -39,6 +40,13 @@ class Content
     public function setTags($tags)
     {
         $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
 
         return $this;
     }

@@ -48,8 +48,10 @@ class ExperienceService extends BaseService
             switch ($experience['type']) {
                 case ExperienceType::ACADEMIC:
                     $academies[] = new ExperienceEntity($this->dataAdapter($experience));
+                    break;
                 default:
                     $professionals[] = new ExperienceEntity($this->dataAdapter($experience));
+                    break;
             }
         }
 

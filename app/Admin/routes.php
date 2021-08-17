@@ -26,6 +26,7 @@ Route::group([
         $router->resource('categories', 'CategoryController');
         $router->resource('articles', 'ArticleController');
         $router->resource('tags', 'TagController');
+        $router->resource('gist', 'GistController');
 
         // GIT Page
 //        $router->resource('git_pages', 'GitPageController');

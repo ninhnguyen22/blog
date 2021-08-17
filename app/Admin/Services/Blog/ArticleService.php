@@ -67,28 +67,40 @@ class ArticleService extends BaseService
         return [];
     }
 
+    /**
+     * @param $model
+     */
     public function generate($model)
     {
         $content = new Content();
 
         $tags = $model->tags->pluck('name');
-        $updatedAt = $model->updated_at->format('Y-m-d');
+        $category = $model->category->name;
+        $date = $model->updated_at->format('Y-m-d');
+        if ($model->publish_at) {
+            $date = $model->publish_at->format('Y-m-d');
+        }
 
         $content->setTitle($model->title)
             ->setAuthor(auth()->user()->name)
-            ->setDate($updatedAt)
+            ->setDate($date)
             ->setLocation('VN')
             ->setTags($tags)
+            ->setCategories([$category])
             ->setDescription($model->preview)
             ->setImage('')
             ->setContent($model->content);
 
-        $this->markdownGenerate->generate($content);
+        if ($category === 'Doc') {
+            $this->markdownGenerate->docGenerate($content);
+        } else {
+            $this->markdownGenerate->generate($content);
+        }
     }
 
-    public function generateFileName($date, $title)
+    public function generateFileName($title)
     {
-        $oldFileName = $this->markdownGenerate->getFileName($date, $title);
+        $oldFileName = $this->markdownGenerate->getFileName($title);
         Session::put('_old_file_name', $oldFileName);
     }
 

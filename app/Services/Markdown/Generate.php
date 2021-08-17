@@ -11,7 +11,11 @@ class Generate
     protected $contentString;
 
     const FILE_PATH_PREFIX = [
-        'blog', 'blog', '_posts'
+        'blog', 'blogs'
+    ];
+
+    const DOC_FILE_PATH_PREFIX = [
+        'blog', 'docs', 'nin'
     ];
 
     public function __construct(Content $content)
@@ -26,13 +30,14 @@ class Generate
         return $this;
     }
 
-    public function makeContentString()
+    public function makeContentString($isDoc = false)
     {
-        $content = $this->getOrigin();
+        $content = $isDoc ? $this->getDocOrigin() : $this->getOrigin();
+
         foreach ($this->getContentAttributes() as $attribute) {
             $attributeContent = $this->content->getAttribute($attribute);
-            if ($attribute === 'tags') {
-                $attributeContent = $this->generateTags($attributeContent);
+            if ($attribute === 'tags' || $attribute === "categories") {
+                $attributeContent = $this->generateMultiple($attributeContent);
             }
             $keyReplacer = $this->getKeyReplacer($attribute);
             $content = str_replace($keyReplacer, $attributeContent, $content);
@@ -40,13 +45,13 @@ class Generate
         return $content;
     }
 
-    public function generateTags($tags)
+    public function generateMultiple($targets)
     {
-        $tagsStr = '';
-        foreach ($tags as $tag) {
-            $tagsStr .= '  - ' . $tag . "\n";
+        $str = '';
+        foreach ($targets as $target) {
+            $str .= '  - ' . $target . "\n";
         }
-        return $tagsStr;
+        return $str;
     }
 
     protected function getContentAttributes()
@@ -66,10 +71,24 @@ title: __TITLE__
 date: __DATE__
 tags:
 __TAGS__
+categories:
+__CATEGORIES__
 author: __AUTHOR__
 location: __LOCATION__
 description: __DESCRIPTION__
 image: __IMAGE__
+---
+
+__CONTENT__
+
+        ";
+    }
+
+    protected function getDocOrigin()
+    {
+        return "---
+title: __TITLE__
+date: __DATE__
 ---
 
 __CONTENT__
@@ -84,24 +103,27 @@ __CONTENT__
         }
         $date = $this->content->getAttribute('date');
         $title = $this->content->getAttribute('title');
-        $filePath = $this->getPath($date, $title);
-        $oldFile = Session::get('_old_file_name');
-
-        if ($oldFile) {
-            $oldPath = $this->concatFilePath($oldFile);
-            if ($oldPath !== $filePath && file_exists($oldPath)) {
-                unlink($oldPath);
-            }
-            Session::forget('_old_file_name');
-        }
-
+        $categories = $this->content->getAttribute('categories');
+        $filePath = $this->getPath($date, $title, $categories);
+        
         $this->writeFile($filePath, $this->makeContentString());
-
     }
 
-    public function getFileName($date, $title)
+    public function docGenerate($content = null)
     {
-        return Str::slug($date . '-' . $title) . '.md';
+        if (!is_null($content)) {
+            $this->setContent($content);
+        }
+        $date = $this->content->getAttribute('date');
+        $title = $this->content->getAttribute('title');
+        $filePath = $this->getPath($date, $title, ['doc']);
+
+        $this->writeFile($filePath, $this->makeContentString(true));
+    }
+
+    public function getFileName($title)
+    {
+        return Str::slug($title) . '.md';
     }
 
     protected function getPathPrefix()
@@ -109,15 +131,31 @@ __CONTENT__
         return implode(DIRECTORY_SEPARATOR, self::FILE_PATH_PREFIX);
     }
 
-    protected function getPath($date, $title)
+    protected function getDocPathPrefix()
     {
-        $fileName = $this->getFileName($date, $title);
-        return $this->concatFilePath($fileName);
+        return implode(DIRECTORY_SEPARATOR, self::DOC_FILE_PATH_PREFIX);
     }
 
-    protected function concatFilePath($fileName)
+    protected function getPath($date, $title, $categories)
     {
-        return $this->getPathPrefix() . DIRECTORY_SEPARATOR . $fileName;
+        $fileName = $this->getFileName($title);
+        return $this->concatFilePath($fileName, $categories);
+    }
+
+    protected function concatFilePath($fileName, $categories)
+    {
+        if (empty($categories)) {
+            return $this->getPathPrefix() . DIRECTORY_SEPARATOR . $fileName;
+        }
+
+        if ($categories[0] === 'doc') {
+            $this->makeDir($this->getDocPathPrefix());
+            return $this->getDocPathPrefix() . DIRECTORY_SEPARATOR . $fileName;
+        }
+
+        $category = $categories[0];
+        $this->makeDir($this->getPathPrefix() . DIRECTORY_SEPARATOR . $category);
+        return $this->getPathPrefix() . DIRECTORY_SEPARATOR . $category . DIRECTORY_SEPARATOR . $fileName;
     }
 
     protected function writeFile($path, $content)
@@ -125,6 +163,13 @@ __CONTENT__
         $file = fopen($path, "w") or die("Unable to open file!");
         fwrite($file, $content);
         fclose($file);
+    }
+
+    protected function makeDir($path)
+    {
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
     }
 
 }
