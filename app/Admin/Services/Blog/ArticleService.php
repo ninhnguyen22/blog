@@ -3,8 +3,7 @@
 namespace App\Admin\Services\Blog;
 
 use App\Models\Blog\Article;
-use App\Services\Markdown\Content;
-use App\Services\Markdown\Generate as MarkdownGenerate;
+use App\Services\Markdown\Adapters\ArticleAdapter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Session;
 
@@ -15,17 +14,11 @@ class ArticleService extends BaseService
      */
     protected $articleModel;
 
-    /**
-     * @var MarkdownGenerate
-     */
-    protected $markdownGenerate;
-
-    public function __construct(Article $article, MarkdownGenerate $generate)
+    public function __construct(Article $article)
     {
         parent::__construct();
 
         $this->articleModel = $article;
-        $this->markdownGenerate = $generate;
     }
 
     /**
@@ -72,36 +65,6 @@ class ArticleService extends BaseService
      */
     public function generate($model)
     {
-        $content = new Content();
-
-        $tags = $model->tags->pluck('name');
-        $category = $model->category->name;
-        $date = $model->updated_at->format('Y-m-d');
-        if ($model->publish_at) {
-            $date = $model->publish_at->format('Y-m-d');
-        }
-
-        $content->setTitle($model->title)
-            ->setAuthor(auth()->user()->name)
-            ->setDate($date)
-            ->setLocation('VN')
-            ->setTags($tags)
-            ->setCategories([$category])
-            ->setDescription($model->preview)
-            ->setImage('')
-            ->setContent($model->content);
-
-        if ($category === 'Doc') {
-            $this->markdownGenerate->docGenerate($content);
-        } else {
-            $this->markdownGenerate->generate($content);
-        }
+        (new ArticleAdapter($model))->handle();
     }
-
-    public function generateFileName($title)
-    {
-        $oldFileName = $this->markdownGenerate->getFileName($title);
-        Session::put('_old_file_name', $oldFileName);
-    }
-
 }
