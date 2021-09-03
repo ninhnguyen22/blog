@@ -15,7 +15,7 @@ class ProjectController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Skill';
+    protected $title = 'Project';
 
     /**
      * @var ProjectService

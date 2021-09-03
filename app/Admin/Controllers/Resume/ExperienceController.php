@@ -110,8 +110,8 @@ class ExperienceController extends AdminController
         $form->display('updated_at', __('Updated At'));
 
         $form->select('type', 'Type')->options([
-            1 => 'Academic',
-            2 => 'Professional'
+            ExperienceType::PROFESSIONAL => 'Professional',
+            ExperienceType::ACADEMIC => 'Academic'
         ])->default(1)->required();
 
         $form->date('from', 'From')->required();

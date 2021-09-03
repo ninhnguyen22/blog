@@ -44,6 +44,13 @@ abstract class AbstractFactory
         $frameContent = $content->frameContent();
         $fillable = $content->fillable;
 
+        /* Replace Common */
+        foreach ($this->commonContentReplacer() as $cKeyReplacer => $cReplacer)
+        {
+            $frameContent = str_replace($cKeyReplacer, $cReplacer, $frameContent);
+        }
+
+        /* Replace content attribute */
         foreach ($fillable as $attribute) {
             $attributeContent = $content->getAttribute($attribute);
 
@@ -70,6 +77,13 @@ abstract class AbstractFactory
     protected function getKeyReplacer($attribute)
     {
         return '__' . strtoupper($attribute) . '__';
+    }
+
+    protected function commonContentReplacer()
+    {
+        return [
+            'http://ncore.local/storage/blog/articles' => 'https://ninhnguyen22.github.io/blog/assets/img/articles'
+        ];
     }
 
 }
